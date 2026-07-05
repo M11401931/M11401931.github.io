@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hostinger / Zeabur / Render 比較儀表板</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(16, 24, 42, .78);
+      --panel-2: rgba(20, 30, 52, .92);
+      --text: #eaf0ff;
+      --muted: #a8b3cf;
+      --line: rgba(163, 177, 214, .16);
+      --accent: #7c9cff;
+      --accent-2: #66e3c4;
+      --warn: #ffca66;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,156,255,.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(102,227,196,.14), transparent 26%),
+        linear-gradient(180deg, #08101f 0%, #0b1020 45%, #090d18 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: #b8d1ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1360px; margin: 0 auto; padding: 28px 22px 40px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    .panel {
+      background: linear-gradient(180deg, rgba(18,27,47,.92), rgba(13,20,35,.86));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .hero-main { padding: 28px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border: 1px solid rgba(124,156,255,.28);
+      border-radius: 999px; color: #cdd9ff; background: rgba(124,156,255,.08);
+      font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    h1 { margin: 14px 0 8px; font-size: clamp(30px, 4vw, 46px); line-height: 1.1; }
+    .sub { color: var(--muted); font-size: 15px; max-width: 70ch; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .badge {
+      padding: 9px 12px; border-radius: 999px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.03); color: #dbe6ff; font-size: 13px;
+    }
+    .hero-side { padding: 18px; display: grid; gap: 12px; }
+    .stat { padding: 16px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .stat .value { font-size: 18px; font-weight: 700; }
+    .stat .desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+    .card { padding: 18px; }
+    .card h2, .section h2 { margin: 0 0 10px; font-size: 20px; }
+    .platform {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px;
+    }
+    .platform .name { font-size: 24px; font-weight: 800; }
+    .price { color: var(--accent-2); font-weight: 800; }
+    .tagrow { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 14px; }
+    .tag {
+      font-size: 12px; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.04); color: #dce6ff;
+    }
+    .proscons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .box { padding: 12px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+    .box h3 { margin: 0 0 6px; font-size: 13px; color: #f5f7ff; }
+    .box ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+    .box li + li { margin-top: 4px; }
+
+    .section { padding: 18px; margin-top: 16px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1060px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 14px 12px; text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; background: rgba(14,21,37,.96); z-index: 1; font-size: 13px; color: #dfe8ff; }
+    td { color: #d9e2fb; font-size: 14px; }
+    td .small { color: var(--muted); font-size: 12px; }
+    .platform-name { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .pill { display: inline-block; margin-top: 6px; padding: 4px 8px; border-radius: 999px; font-size: 12px; background: rgba(102,227,196,.12); color: #aef8e6; border: 1px solid rgba(102,227,196,.22); }
+    .pill.alt { background: rgba(124,156,255,.12); color: #cdd9ff; border-color: rgba(124,156,255,.22); }
+    .pill.warn { background: rgba(255,202,102,.12); color: #ffe1a5; border-color: rgba(255,202,102,.22); }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .step { padding: 16px; border-radius: 16px; background: rgba(255,255,255,.035); border: 1px solid var(--line); }
+    .step .num { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: rgba(124,156,255,.16); color: #cfdcff; font-weight: 700; margin-bottom: 10px; }
+    .step h3 { margin: 0 0 8px; font-size: 16px; }
+    .step p, .step li { color: var(--muted); margin: 0; font-size: 13px; }
+    .step ul { margin: 8px 0 0; padding-left: 18px; }
+    .sources { display: grid; gap: 10px; }
+    .source { padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.035); border: 1px solid var(--line); }
+    .source .title { font-weight: 700; margin-bottom: 6px; }
+    .source .meta { color: var(--muted); font-size: 13px; }
+    .footer-note { color: var(--muted); font-size: 12px; margin-top: 12px; }
+    .kicker { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+
+    @media (max-width: 980px) {
+      .hero, .grid-3, .steps, .proscons { grid-template-columns: 1fr; }
+      .wrap { padding: 18px 14px 28px; }
+      table { min-width: 900px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="panel hero-main">
+        <div class="eyebrow">官方來源比較 · 更新日期 2026-07-05</div>
+        <h1>Hostinger / Zeabur / Render<br>一頁式比較儀表板</h1>
+        <div class="sub">
+          這份儀表板把三個平台的<strong>費用、優缺點、架站方式、主要客群與特性</strong>整理成可直接拿去比較的 HTML。
+          內容以官方定價與產品頁為主，並清楚標示了「起始價」與常見計費 caveat。
+        </div>
+        <div class="hero-badges">
+          <span class="badge">Hostinger：偏網站託管 / WordPress / 建站工具</span>
+          <span class="badge">Zeabur：AI 輔助 PaaS / 模板 / 一站式 DevOps</span>
+          <span class="badge">Render：Code-first PaaS / 可擴展應用與雲原生元件</span>
+        </div>
+      </div>
+      <aside class="panel hero-side">
+        <div class="stat">
+          <div class="label">最便宜入門</div>
+          <div class="value">Hostinger Premium：US$2.99/mo</div>
+          <div class="desc">48 個月預付折算價；續費價通常更高。</div>
+        </div>
+        <div class="stat">
+          <div class="label">最像一鍵部署體驗</div>
+          <div class="value">Zeabur Free / Dev / Pro</div>
+          <div class="desc">從本機專案或模板部署，Agent 可自動辨識框架。</div>
+        </div>
+        <div class="stat">
+          <div class="label">最強雲端擴展 / 企業功能</div>
+          <div class="value">Render Pro / Scale</div>
+          <div class="desc">支援 Web Service、DB、Cron、Workflow、SAML、SCIM 等。</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <div class="kicker">一句話先看懂</div>
+      <div class="grid-3">
+        <div class="card panel" style="background: var(--panel-2);">
+          <div class="platform"><div class="name">Hostinger</div><div class="price">起價低</div></div>
+          <div>適合要做一般網站、WordPress、WooCommerce、品牌官網、個人作品集的人。</div>
+          <div class="tagrow"><span class="tag">建站工具</span><span class="tag">WordPress</span><span class="tag">雲主機 / VPS</span></div>
+          <div class="proscons">
+            <div class="box">
+              <h3>優點</h3>
+              <ul>
+                <li>入門價格低、贈送域名與 SSL 等常見配套</li>
+                <li>網站編輯器與 WordPress 託管都很成熟</li>
+                <li>適合快速上線「內容型 / 官網型」站點</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h3>可能的限制</h3>
+              <ul>
+                <li>價格通常是長約預付折算月費</li>
+                <li>比起 PaaS，較不像雲原生應用平台</li>
+                <li>若要深度自訂後端，彈性不如 Render / 自架</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card panel" style="background: var(--panel-2);">
+          <div class="platform"><div class="name">Zeabur</div><div class="price">部署最省事</div></div>
+          <div>適合想把本機專案、模板、資料庫、網域、郵件和基本 DevOps 集中處理的人。</div>
+          <div class="tagrow"><span class="tag">AI DevOps</span><span class="tag">模板部署</span><span class="tag">自有伺服器管理</span></div>
+          <div class="proscons">
+            <div class="box">
+              <h3>優點</h3>
+              <ul>
+                <li>可從本機專案或模板部署，Agent 會辨識框架</li>
+                <li>費用階梯清楚，適合重視固定月支出的人</li>
+                <li>整合網域、DNS、郵件、日誌與團隊權限</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h3>可能的限制</h3>
+              <ul>
+                <li>進階日誌、協作與自有伺服器數量會落在較高方案</li>
+                <li>比較偏「簡化維運」而不是完整雲控制台</li>
+                <li>生態系與全球品牌知名度通常不如大型雲 PaaS</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card panel" style="background: var(--panel-2);">
+          <div class="platform"><div class="name">Render</div><div class="price">雲原生最完整</div></div>
+          <div>適合做 production app、團隊協作、需要 autoscaling / audit logs / compliance 的產品。</div>
+          <div class="tagrow"><span class="tag">Git 部署</span><span class="tag">Web/DB/Cron/Workflow</span><span class="tag">企業治理</span></div>
+          <div class="proscons">
+            <div class="box">
+              <h3>優點</h3>
+              <ul>
+                <li>Repo 連結後可自動部署，支援多種語言與 Docker</li>
+                <li>雲端功能完整：全球區域、CDN、Autoscaling、DB、Cron</li>
+                <li>企業方案有 SSO、SCIM、RBAC、稽核與 SLA</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h3>可能的限制</h3>
+              <ul>
+                <li>workspace + compute + DB + bandwidth 會分開計費</li>
+                <li>規模小時相對簡單，規模大時成本上升快</li>
+                <li>免費 / 低階方案有 service、bandwidth 與資源限制</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <h2>比較表</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 17%">平台</th>
+              <th style="width: 18%">費用模型</th>
+              <th style="width: 21%">架站方式 / 部署方式</th>
+              <th style="width: 18%">主要客群</th>
+              <th style="width: 14%">優點</th>
+              <th style="width: 12%">注意點</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="platform-name">Hostinger</div>
+                <div class="small">傳統網頁託管 + 建站工具</div>
+              </td>
+              <td>
+                <div>Websites：48 個月預付折算月費</div>
+                <div>官方可見起價：<strong>Premium US$2.99/mo</strong>、<strong>Business US$3.99/mo</strong>、<strong>Cloud Startup US$7.99/mo</strong></div>
+                <div class="small">官方註明：All plans are paid upfront；續費價會更高。</div>
+                <span class="pill warn">長約預付</span>
+              </td>
+              <td>
+                <div>網站建置器、WordPress 託管、WooCommerce、VPS、Cloud hosting</div>
+                <div class="small">適合內容站、官網、商店、一般企業網站</div>
+              </td>
+              <td>個人、SMB、接案者、品牌官網、WordPress 使用者</td>
+              <td>價格低、工具齊、上手快、配套完整</td>
+              <td>較不是雲原生 PaaS；長約折算價要注意</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="platform-name">Zeabur</div>
+                <div class="small">AI 輔助 PaaS / 部署平台</div>
+              </td>
+              <td>
+                <div><strong>Free US$0</strong>、<strong>Dev US$5/mo</strong>、<strong>Pro US$19/mo</strong>、<strong>Team US$79/mo</strong></div>
+                <div class="small">Dev / Pro 有 14 天免費；Team 含 3 席位，之後每席 +US$24/mo</div>
+                <span class="pill alt">月費制</span>
+              </td>
+              <td>
+                <div>從本機專案或模板部署，Agent 自動辨識框架；支援租用/管理伺服器、網域、DNS、郵件、日誌</div>
+                <div class="small">偏一站式 DevOps 與模板化部署</div>
+              </td>
+              <td>獨立開發者、新創、小團隊、想省維運的人</td>
+              <td>部署簡單、固定成本清楚、AI 輔助、整合度高</td>
+              <td>進階協作與日誌功能多在高階方案；偏簡化維運</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="platform-name">Render</div>
+                <div class="small">Code-first PaaS / 雲端應用平台</div>
+              </td>
+              <td>
+                <div><strong>Workspace</strong>：Hobby US$0、Pro US$25、Scale US$499、Enterprise custom</div>
+                <div class="small">Compute、DB、Redis、Cron、Workflow 各自計費；Static Sites 為 US$0/月</div>
+                <span class="pill">按需 / 分層</span>
+              </td>
+              <td>
+                <div>連結 Git repo 直接部署；Static Sites、Web Services、Private Services、Background Workers、Postgres、Redis、Cron、Workflows</div>
+                <div class="small">適合標準 Web app、API、背景工作、資料庫、CI/CD 型部署</div>
+              </td>
+              <td>開發團隊、SaaS 產品、需要可擴展雲功能的公司</td>
+              <td>雲原生功能完整、擴展性強、企業治理能力佳</td>
+              <td>費用項目多、規模上升快、低階方案有資源限制</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <h2>架站方式快速看</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Hostinger：先選網站型態</h3>
+          <ul>
+            <li>可選網站建置器、WordPress、WooCommerce、Cloud、VPS。</li>
+            <li>對內容站、公司官網、電商最友善。</li>
+            <li>想快速上線，不想碰太多雲設定時最好用。</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Zeabur：先部署專案，再補周邊</h3>
+          <ul>
+            <li>把本機專案或模板丟上去，Agent 自動辨識。</li>
+            <li>可進一步整合網域、DNS、郵件、日誌、伺服器。</li>
+            <li>適合「我想專注寫 code，其他交給平台」的工作流。</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Render：Git 連上就能跑</h3>
+          <ul>
+            <li>綁 repo 後自動部署，靜態站、API、worker、DB 都能做。</li>
+            <li>有 workspace、compute、資料庫、cron、workflow 等分層。</li>
+            <li>適合需要標準化、可擴展、可治理的產品團隊。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <h2>官方來源</h2>
+      <div class="sources">
+        <div class="source">
+          <div class="title">Hostinger</div>
+          <div class="meta">定價頁：<a href="https://www.hostinger.com/pricing" target="_blank" rel="noreferrer">https://www.hostinger.com/pricing</a></div>
+          <div class="meta">重點：Websites 頁面顯示 Premium US$2.99/mo、Cloud Startup US$7.99/mo，並註明「All plans are paid upfront」。</div>
+        </div>
+        <div class="source">
+          <div class="title">Zeabur</div>
+          <div class="meta">定價頁：<a href="https://zeabur.com/pricing" target="_blank" rel="noreferrer">https://zeabur.com/pricing</a></div>
+          <div class="meta">首頁：<a href="https://zeabur.com/" target="_blank" rel="noreferrer">https://zeabur.com/</a></div>
+          <div class="meta">重點：Free / Dev / Pro / Team 價格與自有伺服器、日誌保留、CI 規格等資訊；首頁說明可由本機專案或模板部署，Agent 會自動辨識框架。</div>
+        </div>
+        <div class="source">
+          <div class="title">Render</div>
+          <div class="meta">定價頁：<a href="https://render.com/pricing" target="_blank" rel="noreferrer">https://render.com/pricing</a></div>
+          <div class="meta">重點：Workspace plans（Hobby / Pro / Scale / Enterprise）、Compute pricing、Postgres / Redis / Cron / Workflow 的定價與功能。</div>
+        </div>
+      </div>
+      <div class="footer-note">
+        備註：以上價格為官方頁面上可見的「起始價 / 方案價 / 折算月費」，實際費用可能因地區、稅金、帳單週期、資源加購與促銷活動而變動。Render 的 Free Web Service 與 Free DB/KV 也有休眠、到期或資料保留限制；Hostinger 則是長約預付與續費價差要特別注意。
+      </div>
+    </section>
+  </div>
+</body>
+</html>
