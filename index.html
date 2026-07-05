@@ -55,6 +55,7 @@
                     <div class="titles-container">
                         <p class="subtitle title-line" id="title1"></p>
                         <p class="subtitle title-line" id="title2"></p>
+                        <p class="subtitle title-line" id="title3"></p>
                     </div>
                     <div class="mb-3">
                         <strong>專長：</strong>
@@ -101,7 +102,7 @@
                 <div class="col-lg-8">
                     <div class="card fade-in">
                         <div class="card-body p-4">
-                            <p class="lead text-center" id="about-text">
+                            <p class="lead text-start" id="about-text">
                             </p>
                         </div>
                     </div>
@@ -218,6 +219,7 @@
             document.getElementById('name').textContent = profileData.name;
             document.getElementById('title1').textContent = profileData.title1;
             document.getElementById('title2').textContent = profileData.title2;
+            document.getElementById('title2').textContent = profileData.title3;
             document.getElementById('expertise').textContent = profileData.expertise;
             document.getElementById('education').textContent = profileData.education;
             document.getElementById('email').textContent = profileData.email;
