@@ -1,2 +1,2 @@
-這是4_2的作業
-https://2026hai.github.io/
+切水果遊戲
+file:///C:/Users/Michellehou/Documents/0716test/fruit-slice.html
